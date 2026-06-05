@@ -31,7 +31,7 @@ Equipped with an **AI Financial Coach** powered by Google Gemini, squires can ex
 > [!TIP]
 > **Click the button below to watch the video demo once you upload the video file into the repository:**
 > 
-> [![Watch Demo Video](https://img.shields.io/badge/Play_Demo_Video-Click_Here-darkred?style=for-the-badge&logo=youtube&logoColor=white)](path/to/your/uploaded_demo_video.mp4)
+> [![Watch Demo Video](https://img.shields.io/badge/Play_Demo_Video-Click_Here-darkred?style=for-the-badge&logo=youtube&logoColor=white)](demo_video.mp4)
 
 ---
 
