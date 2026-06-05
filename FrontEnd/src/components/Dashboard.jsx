@@ -46,20 +46,34 @@ export default function Dashboard({ user, xp, setXp, onOpenRoadmap, completedQue
       <div className="gold-card p-6 md:p-8 rounded-2xl">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 text-left w-full md:w-auto">
-            <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-500/25 flex items-center justify-center shadow-xs">
-              <span className="font-display font-bold text-2xl text-amber-700">L{level}</span>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-extrabold text-xl text-slate-800">
-                  {user.characterClass || 'Compounding Squire'}
-                </span>
-                <span className="text-[10px] font-bold text-amber-800/80 px-2 py-0.5 bg-amber-50 border border-amber-200/50 rounded-full">
-                  Level {level}
-                </span>
+            {/* Avatar with level overlay badge */}
+            <div className="relative">
+              <img 
+                src={user.profilePicture || `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.email || 'Squire'}`} 
+                alt="Profile Avatar" 
+                className="w-20 h-20 rounded-2xl border-2 border-amber-500/30 object-cover shadow-md bg-amber-50/20"
+              />
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-amber-500 border border-white flex items-center justify-center shadow-md">
+                <span className="font-display font-black text-xs text-white">L{level}</span>
               </div>
-              <p className="text-slate-400 text-xs mt-1">
-                Risk profile aligns with the <strong className="text-slate-600">{user.riskProfile}</strong> playstyle.
+            </div>
+
+            <div>
+              <div className="flex flex-col gap-0.5">
+                <span className="font-sans font-extrabold text-lg text-slate-800 leading-tight">
+                  {user.name || (user.email ? user.email.split('@')[0] : 'Squire')}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-display font-black text-sm uppercase tracking-wider gold-text-gradient">
+                    {user.characterClass || 'Compounding Squire'}
+                  </span>
+                  <span className="text-[9px] font-bold text-amber-800/80 px-1.5 py-0.2 bg-amber-50 border border-amber-200/50 rounded-full uppercase">
+                    Lv.{level}
+                  </span>
+                </div>
+              </div>
+              <p className="text-slate-400 text-xs mt-1 leading-normal font-sans">
+                Logged in as <span className="font-bold text-slate-500">{user.email}</span>. Playstyle matches <strong className="text-slate-600">{user.riskProfile}</strong>.
               </p>
             </div>
           </div>

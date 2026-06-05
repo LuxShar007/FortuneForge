@@ -6,22 +6,180 @@ import Leaderboard from './components/Leaderboard';
 import RoadmapModal from './components/RoadmapModal';
 import XpCelebration from './components/XpCelebration';
 import RewardsVault from './components/RewardsVault';
-import { ArrowUpCircle, Sparkles, HelpCircle, Shield, Award, LayoutDashboard, ShoppingBag } from 'lucide-react';
+import AIChatbot from './components/AIChatbot';
+import { Sparkles, HelpCircle, Shield, Award, LayoutDashboard, ShoppingBag } from 'lucide-react';
+
+const calculateActualInvestment = (income, expenses, riskProfile, completedQuestsList) => {
+  const maxInvestment = Math.max(200, (income || 0) - (expenses || 0));
+  let total = Math.round(maxInvestment * 0.4);
+  
+  (completedQuestsList || []).forEach(questId => {
+    if (questId === 'default-1') {
+      total += Math.round((income || 0) * 0.02);
+    } else if (questId === 'default-2') {
+      total += 40;
+    } else if (questId === 'custom-1') {
+      if (riskProfile === 'Conservative') total += 50;
+      else if (riskProfile === 'Growth') total += 150;
+      else if (riskProfile === 'Speculative') total += Math.round(maxInvestment * 0.05);
+      else total += 100; // Balanced
+    }
+  });
+  return total;
+};
 
 function App() {
   const [user, setUser] = useState({
+    id: null,
+    email: '',
+    name: '',
+    profilePicture: '',
     income: 0,
     expenses: 0,
     riskProfile: '',
     characterClass: '',
-    hasOnboarded: false
+    hasOnboarded: false,
+    isAuthenticated: false
   });
 
   const [xp, setXp] = useState(350); // Start user with 350 XP
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isRoadmapOpen, setIsRoadmapOpen] = useState(false);
-  const [isFloatAwayActive, setIsFloatAwayActive] = useState(false);
   const [completedQuests, setCompletedQuests] = useState([]);
+
+  // Handle OAuth Popup Callback Redirect
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && window.opener) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get('access_token');
+      const state = params.get('state');
+      if (accessToken) {
+        window.opener.postMessage({
+          type: 'oauth-token',
+          accessToken,
+          provider: state || 'google'
+        }, window.location.origin);
+        window.close();
+      }
+    }
+  }, []);
+
+  // Check for existing token and retrieve user profile on mount
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await fetch('http://localhost:8000/api/user/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser({
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.name || '',
+            profilePicture: data.user.profilePicture || '',
+            income: data.user.income || 0,
+            expenses: data.user.expenses || 0,
+            riskProfile: data.user.riskProfile || '',
+            characterClass: data.user.characterClass || '',
+            hasOnboarded: data.user.baselineConfigured,
+            isAuthenticated: true
+          });
+          setXp(data.user.xp !== undefined ? data.user.xp : 350);
+          setCompletedQuests(data.user.completedQuests || []);
+          if (data.user.baselineConfigured) {
+            const initialInvestment = calculateActualInvestment(
+              data.user.income,
+              data.user.expenses,
+              data.user.riskProfile,
+              data.user.completedQuests || []
+            );
+            setUserInvestment(initialInvestment);
+          }
+        } else {
+          // Token is invalid/expired, clear it
+          localStorage.removeItem('token');
+        }
+      } catch (err) {
+        console.error('Failed to fetch user profile:', err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const syncUserProgress = async (newXp, newCompletedQuests) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      await fetch('http://localhost:8000/api/user/progress', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          xp: newXp,
+          completedQuests: newCompletedQuests
+        })
+      });
+    } catch (err) {
+      console.error('Failed to sync progress:', err);
+    }
+  };
+
+  const handleAuthSuccess = (token, userData) => {
+    localStorage.setItem('token', token);
+    setUser({
+      id: userData.id,
+      email: userData.email,
+      name: userData.name || '',
+      profilePicture: userData.profilePicture || '',
+      income: userData.income || 0,
+      expenses: userData.expenses || 0,
+      riskProfile: userData.riskProfile || '',
+      characterClass: userData.characterClass || '',
+      hasOnboarded: userData.baselineConfigured,
+      isAuthenticated: true
+    });
+    setXp(userData.xp !== undefined ? userData.xp : 350);
+    setCompletedQuests(userData.completedQuests || []);
+    if (userData.baselineConfigured) {
+      const initialInvestment = calculateActualInvestment(
+        userData.income,
+        userData.expenses,
+        userData.riskProfile,
+        userData.completedQuests || []
+      );
+      setUserInvestment(initialInvestment);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser({
+      id: null,
+      email: '',
+      name: '',
+      profilePicture: '',
+      income: 0,
+      expenses: 0,
+      riskProfile: '',
+      characterClass: '',
+      hasOnboarded: false,
+      isAuthenticated: false
+    });
+    setXp(350);
+    setCompletedQuests([]);
+    setActiveTab('dashboard');
+  };
 
   // Simulated investment metrics for Commitment Score
   const [userInvestment, setUserInvestment] = useState(0);
@@ -40,24 +198,52 @@ function App() {
   const [redeemedItems, setRedeemedItems] = useState([]);
 
   // Handles onboarding completion
-  const handleOnboardingComplete = (data) => {
+  const handleOnboardingComplete = (userData) => {
     setUser({
-      ...data,
-      hasOnboarded: true
+      id: userData.id,
+      email: userData.email,
+      name: userData.name || '',
+      profilePicture: userData.profilePicture || '',
+      income: userData.income,
+      expenses: userData.expenses,
+      riskProfile: userData.riskProfile,
+      characterClass: userData.characterClass,
+      hasOnboarded: true,
+      isAuthenticated: true
     });
-    const maxInvestment = Math.max(200, data.income - data.expenses);
-    setUserInvestment(Math.round(maxInvestment * 0.4)); // Default to 40% of surplus cash
+    const initialInvestment = calculateActualInvestment(
+      userData.income,
+      userData.expenses,
+      userData.riskProfile,
+      []
+    );
+    setUserInvestment(initialInvestment);
   };
 
   // Handles quest completion
   const handleClaimQuest = (questId, rewardXp) => {
-    setCompletedQuests((prev) => [...prev, questId]);
+    const nextQuests = [...completedQuests, questId];
+    const nextXp = xp + rewardXp;
+
+    setCompletedQuests(nextQuests);
+    setXp(nextXp);
+
+    // Recalculate actual investment based on new quest list
+    const nextInvestment = calculateActualInvestment(
+      user.income,
+      user.expenses,
+      user.riskProfile,
+      nextQuests
+    );
+    setUserInvestment(nextInvestment);
+
     setCelebration({
       isOpen: true,
       xpAmount: rewardXp,
       reason: 'Quest Completed!'
     });
-    setXp((prev) => prev + rewardXp);
+
+    syncUserProgress(nextXp, nextQuests);
   };
 
   // Intercepts Dashboard XP upgrades to show victory popup
@@ -76,6 +262,7 @@ function App() {
             reason: reason
           });
         }
+        syncUserProgress(next, completedQuests);
         return next;
       });
     } else {
@@ -88,6 +275,7 @@ function App() {
         });
       }
       setXp(updater);
+      syncUserProgress(updater, completedQuests);
     }
   };
 
@@ -109,41 +297,15 @@ function App() {
     });
   };
 
-  // Trigger Antigravity Egg
-  const triggerAntigravity = () => {
-    setIsFloatAwayActive(true);
-  };
+
 
   return (
     <div className={`relative min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-amber-100 selection:text-amber-900 transition-colors duration-500 ${
       user.hasOnboarded ? 'bg-[#F3EDE2]' : 'bg-[#FCFBF9]'
     }`}>
       
-      {/* EASTER EGG RESET PANEL: Rendered outside the animated wrapper */}
-      {isFloatAwayActive && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-fade-in pointer-events-auto">
-          <div className="bg-white border border-amber-500/20 max-w-sm w-full p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-amber-50 border border-amber-300 rounded-full flex items-center justify-center text-amber-700 mb-4 animate-bounce">
-              <ArrowUpCircle className="w-8 h-8" />
-            </div>
-            <h3 className="font-display font-extrabold text-xl text-slate-800 mb-2">
-              Antigravity Activated!
-            </h3>
-            <p className="text-slate-500 text-xs leading-relaxed mb-6 font-sans">
-              The layout wrapper has translated <strong>-130vh</strong> with <strong>25deg</strong> rotation. Standard physics have been temporarily overridden.
-            </p>
-            <button
-              onClick={() => setIsFloatAwayActive(false)}
-              className="px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-display font-bold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer"
-            >
-              Reset Gravity
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* DYNAMIC LAYOUT WRAPPER: Animates away when Easter Egg triggers */}
-      <div className={`relative flex-1 flex flex-col justify-between w-full transition-all duration-300 ${isFloatAwayActive ? 'float-away-active' : ''}`}>
+      {/* DYNAMIC LAYOUT WRAPPER */}
+      <div className="relative flex-1 flex flex-col justify-between w-full transition-all duration-300">
         
         {/* HEADER */}
         <header className="sticky top-0 z-35 bg-white/95 border-b border-amber-500/10 backdrop-blur-md">
@@ -199,14 +361,15 @@ function App() {
 
             {/* Action Bar / Easter Egg Trigger */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={triggerAntigravity}
-                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 border border-amber-300 hover:border-amber-400 bg-amber-50/50 hover:bg-amber-100/50 text-amber-800 font-display font-bold text-[10px] uppercase tracking-wider rounded-xl transition duration-200 cursor-pointer"
-                title="Trigger global CSS keyframe floatAway animation (-130vh translate, 25deg rotation)"
-              >
-                <ArrowUpCircle className="w-3.5 h-3.5 animate-pulse" />
-                Antigravity Egg
-              </button>
+              {user.isAuthenticated && (
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 border border-red-200 hover:border-red-300 bg-red-50/50 hover:bg-red-100/50 text-red-700 font-display font-bold text-[10px] uppercase tracking-wider rounded-xl transition duration-200 cursor-pointer animate-fade-in"
+                >
+                  Log Out
+                </button>
+              )}
+
             </div>
           </div>
         </header>
@@ -214,7 +377,11 @@ function App() {
         {/* MAIN BODY AREA */}
         <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto px-4 md:px-8 py-8">
           {!user.hasOnboarded ? (
-            <Onboarding onComplete={handleOnboardingComplete} />
+            <Onboarding 
+              user={user} 
+              onAuthSuccess={handleAuthSuccess} 
+              onComplete={handleOnboardingComplete} 
+            />
           ) : (
             <div className="space-y-12">
               {/* Tab Content Router */}
@@ -227,6 +394,7 @@ function App() {
                     onOpenRoadmap={setIsRoadmapOpen}
                     completedQuests={completedQuests}
                     commitmentScore={commitmentScore}
+                    setUserInvestment={setUserInvestment}
                   />
                   <hr className="border-amber-500/10" />
                   <QuestBoard
@@ -270,12 +438,7 @@ function App() {
               >
                 Future Roadmap
               </button>
-              <button
-                onClick={triggerAntigravity}
-                className="md:hidden text-xs font-semibold text-amber-800 hover:underline transition cursor-pointer flex items-center gap-1"
-              >
-                <ArrowUpCircle className="w-3.5 h-3.5" /> Antigravity Egg
-              </button>
+
             </div>
           </div>
         </footer>
@@ -292,6 +455,9 @@ function App() {
         reason={celebration.reason}
         onClose={() => setCelebration({ isOpen: false, xpAmount: 0, reason: '' })}
       />
+
+      {/* AI CHATBOT COACH */}
+      {user.isAuthenticated && <AIChatbot />}
     </div>
   );
 }
