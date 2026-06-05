@@ -375,7 +375,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
       {/* Full Background Video - 100% Opaque */}
       <div className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
         <video
-          src="/sparrow.mp4"
+          src={`${import.meta.env.BASE_URL}sparrow.mp4`}
           autoPlay
           loop
           muted
