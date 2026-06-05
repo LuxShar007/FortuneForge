@@ -11,9 +11,17 @@ Equipped with an **AI Financial Coach** powered by Google Gemini, squires can ex
   <a href="#-demo-video">
     <img src="https://img.shields.io/badge/Watch%20Demo-Video%20Play-gold?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo" />
   </a>
-  <a href="#-technology-stack">
-    <img src="https://img.shields.io/badge/Tech%20Stack-Languages%20%26%20Software-darkgoldenrod?style=for-the-badge&logo=databricks&logoColor=white" alt="Tech Stack" />
-  </a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Full%20Stack-Platform-darkgoldenrod?style=for-the-badge" alt="Full Stack" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/Gemini%20AI-8E75C2?style=for-the-badge&logo=google-gemini&logoColor=white" alt="Gemini" />
 </p>
 
 ---
