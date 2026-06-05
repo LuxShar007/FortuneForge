@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Onboarding from './components/Onboarding';
+import { API_BASE_URL } from './config';
+
 import Dashboard from './components/Dashboard';
 import QuestBoard from './components/QuestBoard';
 import Leaderboard from './components/Leaderboard';
@@ -72,7 +74,7 @@ function App() {
       if (!token) return;
 
       try {
-        const response = await fetch('http://localhost:8000/api/user/profile', {
+        const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -119,7 +121,7 @@ function App() {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      await fetch('http://localhost:8000/api/user/progress', {
+      await fetch(`${API_BASE_URL}/api/user/progress`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

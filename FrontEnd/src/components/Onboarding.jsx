@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, ShieldAlert, TrendingUp, Sparkles, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { API_BASE_URL } from '../config';
+
 
 export default function Onboarding({ user, onAuthSuccess, onComplete }) {
   // Authentication states
@@ -133,7 +135,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
         picture = msData.picture || null;
       }
 
-      const response = await fetch('http://localhost:8000/api/auth/oauth', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/oauth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -183,7 +185,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/auth/oauth', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/oauth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -237,7 +239,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
 
     const endpoint = isLogin ? 'login' : 'register';
     try {
-      const response = await fetch(`http://localhost:8000/api/auth/${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -277,7 +279,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
     try {
       let response;
       if (pendingRegData.type === 'email') {
-        response = await fetch('http://localhost:8000/api/auth/register', {
+        response = await fetch(`${API_BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -287,7 +289,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
           })
         });
       } else {
-        response = await fetch('http://localhost:8000/api/auth/oauth', {
+        response = await fetch(`${API_BASE_URL}/api/auth/oauth`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -341,7 +343,7 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/user/baseline', {
+      const response = await fetch(`${API_BASE_URL}/api/user/baseline`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

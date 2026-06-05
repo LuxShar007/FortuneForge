@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
+import { API_BASE_URL } from '../config';
+
 
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +41,7 @@ export default function AIChatbot() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8000/api/ai/chat', {
+      const response = await fetch(`${API_BASE_URL}/api/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
