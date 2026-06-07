@@ -405,6 +405,7 @@ function App() {
               user={user} 
               onAuthSuccess={handleAuthSuccess} 
               onComplete={handleOnboardingComplete} 
+              onNavigate={setActiveTab}
             />
           ) : (
             <div className="space-y-12">

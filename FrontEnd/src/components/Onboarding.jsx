@@ -3,7 +3,7 @@ import { DollarSign, ShieldAlert, TrendingUp, Sparkles, Mail, Lock, Eye, EyeOff 
 import { API_BASE_URL } from '../config';
 
 
-export default function Onboarding({ user, onAuthSuccess, onComplete }) {
+export default function Onboarding({ user, onAuthSuccess, onComplete, onNavigate }) {
   // Authentication states
   const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState('');
@@ -579,6 +579,23 @@ export default function Onboarding({ user, onAuthSuccess, onComplete }) {
                 </div>
               </>
             )}
+            <div className="text-center mt-6 pt-4 border-t border-slate-100 flex items-center justify-center gap-3 text-[10px] text-slate-400 font-semibold">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('privacy')}
+                className="hover:text-amber-800 hover:underline transition cursor-pointer"
+              >
+                Privacy Policy
+              </button>
+              <span className="text-slate-200">|</span>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('terms')}
+                className="hover:text-amber-800 hover:underline transition cursor-pointer"
+              >
+                Terms of Service
+              </button>
+            </div>
           </div>
         ) : (
           /* BASELINE CONFIGURATION FORM (ONLY SHOWN AFTER AUTHENTICATED) */
