@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "name": "Backend",
+      "path": "BackEnd/FortuneForge/backend"
+    },
+    {
+      "name": "Frontend",
+      "path": "FrontEnd"
+    },
+    {
+      "name": "Project Root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder:Backend}/.venv/Scripts/python.exe",
+    "python.interpreterPath": "${workspaceFolder:Backend}/.venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+      "${workspaceFolder:Backend}"
+    ],
+    "python.analysis.autoSearchPaths": true
+  }
+}

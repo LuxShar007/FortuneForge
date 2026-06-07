@@ -1,0 +1,20 @@
+{
+  "venvPath": "BackEnd/FortuneForge/backend",
+  "venv": ".venv",
+  "executionEnvironments": [
+    {
+      "root": "BackEnd/FortuneForge/backend",
+      "extraPaths": [
+        "BackEnd/FortuneForge/backend/.venv/Lib/site-packages",
+        "BackEnd/FortuneForge/backend"
+      ]
+    },
+    {
+      "root": "Backend/FortuneForge/backend",
+      "extraPaths": [
+        "Backend/FortuneForge/backend/.venv/Lib/site-packages",
+        "Backend/FortuneForge/backend"
+      ]
+    }
+  ]
+}

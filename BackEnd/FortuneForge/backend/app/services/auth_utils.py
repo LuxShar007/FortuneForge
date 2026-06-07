@@ -40,9 +40,9 @@ def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(secu
     )
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
-        user_id: int = payload.get("id")
+        user_id = payload.get("id")
         if user_id is None:
             raise credentials_exception
-        return user_id
+        return int(user_id)
     except JWTError:
         raise credentials_exception

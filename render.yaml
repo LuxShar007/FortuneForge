@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: fortuneforge-backend
+    env: python
+    rootDir: BackEnd/FortuneForge/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////var/data/fortuneforge.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+    disks:
+      - name: fortuneforge-db-disk
+        mountPath: /var/data
+        sizeGB: 1

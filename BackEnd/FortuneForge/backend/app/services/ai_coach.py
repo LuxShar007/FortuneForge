@@ -122,7 +122,7 @@ def generate_chat_response(
             model="gemini-2.5-flash",
             contents=prompt
         )
-        return response.text
+        return response.text or ""
     except Exception as e:
         return (
             f"I hear you, {user_context.get('name', 'Squire')}. I encountered a slight mana interruption (Gemini error: {e}). "
