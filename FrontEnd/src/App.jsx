@@ -9,6 +9,8 @@ import RoadmapModal from './components/RoadmapModal';
 import XpCelebration from './components/XpCelebration';
 import RewardsVault from './components/RewardsVault';
 import AIChatbot from './components/AIChatbot';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 import { Sparkles, HelpCircle, Shield, Award, LayoutDashboard, ShoppingBag } from 'lucide-react';
 
 const calculateActualInvestment = (income, expenses, riskProfile, completedQuestsList) => {
@@ -378,7 +380,11 @@ function App() {
 
         {/* MAIN BODY AREA */}
         <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto px-4 md:px-8 py-8">
-          {!user.hasOnboarded ? (
+          {activeTab === 'privacy' ? (
+            <PrivacyPolicy onBack={() => setActiveTab(user.hasOnboarded ? 'dashboard' : 'onboarding')} />
+          ) : activeTab === 'terms' ? (
+            <TermsOfService onBack={() => setActiveTab(user.hasOnboarded ? 'dashboard' : 'onboarding')} />
+          ) : !user.hasOnboarded ? (
             <Onboarding 
               user={user} 
               onAuthSuccess={handleAuthSuccess} 
@@ -435,12 +441,23 @@ function App() {
 
             <div className="flex items-center gap-6">
               <button
+                onClick={() => setActiveTab('privacy')}
+                className="text-xs font-semibold text-slate-500 hover:text-amber-800 hover:underline transition cursor-pointer"
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => setActiveTab('terms')}
+                className="text-xs font-semibold text-slate-500 hover:text-amber-800 hover:underline transition cursor-pointer"
+              >
+                Terms of Service
+              </button>
+              <button
                 onClick={() => setIsRoadmapOpen(true)}
                 className="text-xs font-semibold text-slate-500 hover:text-amber-800 hover:underline transition cursor-pointer"
               >
                 Future Roadmap
               </button>
-
             </div>
           </div>
         </footer>
