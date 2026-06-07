@@ -316,8 +316,24 @@ function App() {
           <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-500/30 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-amber-700" />
+              <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-500/30 flex items-center justify-center overflow-hidden">
+                <svg className="w-6 h-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="gold-header" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FCE881" />
+                      <stop offset="50%" stopColor="#C79D32" />
+                      <stop offset="100%" stopColor="#9A7012" />
+                    </linearGradient>
+                    <linearGradient id="dark-gold-header" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#C79D32" />
+                      <stop offset="100%" stopColor="#6E4D07" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M50 8 C72 8 88 18 88 42 C88 68 50 88 50 92 C50 88 12 68 12 42 C12 18 28 8 50 8 Z" fill="url(#gold-header)" />
+                  <path d="M50 14 C68 14 82 22 82 42 C82 64 50 81 50 85 C50 81 18 64 18 42 C18 22 32 14 50 14 Z" fill="url(#dark-gold-header)" />
+                  <path d="M32 40 L68 40 C74 40 76 45 68 49 L62 52 L64 62 C64 64 60 66 50 66 C40 66 36 64 36 62 L38 52 L32 49 C24 45 26 40 32 40 Z" fill="url(#gold-header)" />
+                  <path d="M50 24 L52 30 L58 32 L52 34 L50 40 L48 34 L42 32 L48 30 Z" fill="#FFFFFF" />
+                </svg>
               </div>
               <span className="font-display font-black text-xl tracking-tight uppercase gold-text-gradient">
                 FortuneForge
