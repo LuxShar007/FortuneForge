@@ -69,6 +69,15 @@ function App() {
     }
   }, []);
 
+  // Check for tab query parameters on mount (useful for Google OAuth verification links)
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam === 'privacy' || tabParam === 'terms') {
+      setActiveTab(tabParam);
+    }
+  }, []);
+
   // Check for existing token and retrieve user profile on mount
   React.useEffect(() => {
     const fetchProfile = async () => {
