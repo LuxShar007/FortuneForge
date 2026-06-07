@@ -5,8 +5,11 @@ FortuneForge is a next-generation, gamified financial management and education p
 Equipped with an **AI Financial Coach** powered by Google Gemini, squires can explore personalized quests, scale a commitment leaderboard, and forge their way toward financial independence.
 
 <p align="center">
-  <a href="https://your-live-website.com" target="_blank">
-    <img src="https://img.shields.io/badge/Visit%20Website-Live%20Demo-goldenrod?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Visit Website" />
+  <a href="https://your-vercel-live-link.com" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Live Demo Vercel" />
+  </a>
+  <a href="https://render.com" target="_blank">
+    <img src="https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Backend Render" />
   </a>
   <a href="#-demo-video">
     <img src="https://img.shields.io/badge/Watch%20Demo-Video%20Play-gold?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo" />
@@ -136,15 +139,10 @@ Ensure you have **Node.js** (v18+) and **Python** (v3.9+) installed.
 
 ---
 
-## 🌐 Deploying to GitHub Pages
+## 🌐 Production Deployment (Vercel & Render)
 
-GitHub Pages is designed for hosting **static websites (frontend only)**. Because FortuneForge relies on a dynamic backend (FastAPI and SQLite), a full deployment requires hosting the backend on an external server.
+For production, FortuneForge is deployed as a decoupled application:
+*   **Frontend:** Hosted on **Vercel** (static React hosting with SPA fallback).
+*   **Backend:** Hosted on **Render** (FastAPI service with a persistent SQLite disk).
 
-### Steps to Deploy:
-1. **Host the Backend:** Deploy the FastAPI application to a platform like **Render**, **Railway**, **fly.io**, or **Heroku**.
-2. **Update API URLs:** Update the `fetch` endpoints in the frontend code from `http://localhost:8000` to your hosted backend URL.
-3. **Build Frontend:** Compile the static React assets:
-   ```bash
-   npm run build
-   ```
-4. **Deploy Frontend:** Use the `gh-pages` npm package to deploy the `dist` directory to your GitHub repository.
+For complete, step-by-step instructions on deploying the frontend and backend, setting up database persistence, and configuring environment variables, refer to the [DEPLOYMENT.md](DEPLOYMENT.md) guide.
