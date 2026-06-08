@@ -118,6 +118,12 @@ Ensure you have **Node.js** (v18+) and **Python** (v3.9+) installed.
    uvicorn app.main:app --reload --port 8000
    ```
 
+> [!IMPORTANT]
+> **🔑 OTP Verification Code for Testing / Demo Mode:**
+> When registering or signing up via OAuth for the first time, you will be prompted for a **6-digit OTP verification code**.
+> - For local development, testing, and staging, you can simply enter **`123456`** to bypass verification.
+> - Alternatively, you can check the backend console logs where the server is running; the generated OTP code is printed there automatically.
+
 ### 3. Setting Up the Frontend
 1. Navigate to the frontend directory:
    ```bash
